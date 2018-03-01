@@ -1,7 +1,10 @@
 import psycopg2
 import bleach
+import os
+import errno
 
 DBNAME = "news"
+OUTPUT_FILE = "output.txt"
 
 # get top 3 articles
 get_top_articles = '''
@@ -61,35 +64,49 @@ def print_top_articles():
     '''
         run query and print out information
     '''
+    out = open(OUTPUT_FILE, 'a+')
     top_articles = run_query(get_top_articles)
-    print("Top 3 articles")
+    out.write("Top 3 articles\n")
     for row in top_articles:
-        print(row[0] + " - " + str(row[1]))
+        out.write(row[0] + " - " + str(row[1]) + "\n")
+    out.write("\n\n")
+    out.close()
 
 
 def print_top_authors():
     '''
         run query and print out information
     '''
+    out = open(OUTPUT_FILE, 'a+')
     top_authors = run_query(get_top_authors)
-    print("Top 3 authors")
+    out.write("Top 3 author\n")
     for row in top_authors:
-        print(row[0] + " - " + str(row[1]))
+        out.write(row[0] + " - " + str(row[1]) + "\n")
+    out.write("\n\n")
+    out.close()
 
 
 def print_fail_rate_greater_than_1():
     '''
         run query and print out information
     '''
+    out = open(OUTPUT_FILE, 'a+')
     rate_greater_than_1 = run_query(get_failed_rate_greater_than_1)
-    print("The date that failed rate is greater than 1")
+    out.write("The date that failed rate is greater than 1\n")
     for row in rate_greater_than_1:
-        print(str(row[0]) + " - " + str(round(row[1], 2)) + "%.")
+        out.write(str(row[0]) + " - " + str(round(row[1], 2)) + "%.\n")
+    out.write("\n\n")
+    out.close()
 
 
 # start of the program
+
+# remove output file if it already exist
+try:
+    os.remove(OUTPUT_FILE)
+except OSError:
+    pass
+
 print_top_articles()
-print ""
 print_top_authors()
-print ""
 print_fail_rate_greater_than_1()
