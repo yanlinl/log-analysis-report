@@ -63,7 +63,6 @@ def connect_db(database_name):
         sys.exit(1)
 
 
-
 def run_query(sql_query):
     """Connect to data base and run query. After the query is finished,
     disconnect the database."""
@@ -116,11 +115,12 @@ def print_fail_rate_greater_than_1():
 # start of the program
 
 # remove output file if it already exist
-try:
-    os.remove(OUTPUT_FILE)
-except OSError:
-    pass
+if __name__ == '__main__':
+    try:
+        os.remove(OUTPUT_FILE)
+    except OSError:
+        pass
 
-print_top_articles()
-print_top_authors()
-print_fail_rate_greater_than_1()
+    print_top_articles()
+    print_top_authors()
+    print_fail_rate_greater_than_1()
