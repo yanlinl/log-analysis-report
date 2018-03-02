@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import psycopg2
 import bleach
 import os
@@ -49,11 +51,23 @@ get_failed_rate_greater_than_1 = '''
                     '''
 
 
+def connect_db(database_name):
+    """Connect to the PostgreSQL database.  Returns a database connection."""
+    try:
+        db = psycopg2.connect("dbname={}".format(database_name))
+        c = db.cursor()
+        return db, c
+    except psycopg2.Error as e:
+        print "Unable to connect to database"
+        # exit program if the database can't be opened
+        sys.exit(1)
+
+
+
 def run_query(sql_query):
     """Connect to data base and run query. After the query is finished,
     disconnect the database."""
-    db = psycopg2.connect(database=DBNAME)
-    c = db.cursor()
+    db, c = connect_db(DBNAME)
     c.execute(sql_query)
     result = c.fetchall()
     db.close()
